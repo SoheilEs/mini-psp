@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: psp_postgres_dev
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mini_psp
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+      target: development   # 👈 Uses dev stage from Dockerfile
+    container_name: psp_backend_dev
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/app       # 👈 Mount code for live reload
+      - /app/node_modules    # avoid overwriting node_modules
+    depends_on:
+      - postgres
+    command: npm run start:dev
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: psp_frontend_dev
+    ports:
+      - "5173:5173"
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./frontend:/app      # 👈 Mount frontend code
+      - /app/node_modules
+    command: npm run dev
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
