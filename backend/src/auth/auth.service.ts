@@ -23,7 +23,8 @@ export class AuthService {
         return this.usersRepository.save(user)
     }
     async login(email:string,password:string){
-      
+        
+        
         const user = await this.usersRepository.findOne({where:{email}})
         if(!user) throw new UnauthorizedException("User not found")
         const valid  = await bcrypt.compare(password,user.password)

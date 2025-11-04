@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+        "watchOptions": {
+          "polling": 1000
+    },
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,

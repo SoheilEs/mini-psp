@@ -25,8 +25,8 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./backend:/app       # 👈 Mount code for live reload
-      - /app/node_modules    # avoid overwriting node_modules
+      - ./backend:/app       # Mount local code into container
+      - /app/node_modules   
     depends_on:
       - postgres
     command: npm run start:dev
